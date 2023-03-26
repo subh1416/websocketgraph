@@ -1,0 +1,186 @@
+{% load static %}
+<!DOCTYPE html>
+
+
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+    integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+
+
+  <link rel="stylesheet" type="text/css" href="{% static 'Dashcss.css' %}">
+  <style>
+    .download{
+      display: flex;
+      justify-content: center;
+      
+      
+     
+    }
+    .down {
+      display: flex;
+      margin: 7px;
+      padding: 9px;
+      background-color: black;
+      border: none;
+      outline: none;
+      color: white;
+      border-radius: 3px;
+    }
+
+    .down:hover {
+      background-color: gray;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.1.min.js"
+    integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+
+
+
+</head>
+
+
+
+<body>
+  {% comment %} <label>
+    <input type="checkbox">
+    <div class="toggle">
+      <span class="top_line common"></span>
+      <span class="middle_line common"></span>
+      <span class="bottom_line common"></span>
+    </div>
+    <div class="slide">
+      <h1 style="text-align:center ;">NLI</h1>
+      <ul>
+        <li><a href=""><i class="fas fa-box"></i>Dashboard</li></a>
+        <li><a href=""><i class="fas fa-user"></i>subh</li></a>
+        <li><a href=""><i class="fas fa-tv"></i>parth</li></a>
+        <li><a href=""><i class="fas fa-comments"></i>akansha</li></a>
+      </ul>
+      <div id="logout">
+        <ul>
+          <li><a href="">Log Out</a></li>
+        </ul>
+      </div>
+    </div>
+  </label> {% endcomment %}
+
+
+
+  <div class="card" >
+    <canvas id="myChart"></canvas>
+  </div>
+
+
+
+  <div class="card1">
+    <div class="tableFixHead">
+      <table>
+        <thead>
+          <tr>
+
+            <th>Temperature</th>
+            <th>Gyro</th>
+            <th>Current</th>
+            <th>Battery</th>
+
+          </tr>
+        </thead>
+
+        <tbody id="content">
+
+
+
+        </tbody>
+      </table>
+      <br><br>
+
+
+    </div>
+  </div>
+  <br><br>
+
+  <div class="download">
+
+    <button class="down" type="button" onclick="tableToCSV()">Download CSV</button>
+  </div>
+
+
+  <script src="{%static 'dash.js'%}"></script>
+
+  <script type="text/javascript">
+    function tableToCSV() {
+
+      // Variable to store the final csv data
+      var csv_data = [];
+
+      // Get each row data
+      var rows = document.getElementsByTagName('tr');
+      for (var i = 0; i < rows.length; i++) {
+
+        // Get each column data
+        var cols = rows[i].querySelectorAll('td,th');
+
+        // Stores each csv row data
+        var csvrow = [];
+        for (var j = 0; j < cols.length; j++) {
+
+          // Get the text data of each cell
+          // of a row and push it to csvrow
+          csvrow.push(cols[j].innerHTML);
+        }
+
+        // Combine each column value with comma
+        csv_data.push(csvrow.join(","));
+      }
+
+      // Combine each row data with new line character
+      csv_data = csv_data.join('\n');
+
+      // Call this function to download csv file
+      downloadCSVFile(csv_data);
+
+    }
+
+    function downloadCSVFile(csv_data) {
+
+      // Create CSV file object and feed
+      // our csv_data into it
+      CSVFile = new Blob([csv_data], {
+        type: "text/csv"
+      });
+
+      // Create to temporary link to initiate
+      // download process
+      var temp_link = document.createElement('a');
+
+      // Download csv file
+      temp_link.download = "Websocket_Data.csv";
+      var url = window.URL.createObjectURL(CSVFile);
+      temp_link.href = url;
+
+      // This link should not be displayed
+      temp_link.style.display = "none";
+      document.body.appendChild(temp_link);
+
+      // Automatically click the link to
+      // trigger download
+      temp_link.click();
+      document.body.removeChild(temp_link);
+    }
+  </script>
+</body>
+
+
+
+</html>
+
+
